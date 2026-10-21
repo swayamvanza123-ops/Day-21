@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day-21 | Inventory Pro</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">I</div>
+      <div><h2>Invento<span>Pro</span></h2><small>MANAGEMENT SYSTEM</small></div>
+    </div>
+
+    <p class="nav-label">WORKSPACE</p>
+    <nav>
+      <button class="nav-link active" data-page="dashboard"><span>▦</span> Dashboard</button>
+      <button class="nav-link" data-page="products"><span>▣</span> Products</button>
+      <button class="nav-link" data-page="suppliers"><span>♙</span> Suppliers</button>
+      <button class="nav-link" data-page="sales"><span>↗</span> Sales</button>
+      <button class="nav-link" data-page="stock"><span>⇅</span> Stock Management</button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="help-card">
+        <div class="help-icon">✦</div>
+        <strong>Inventory made simple</strong>
+        <p>Manage your products and stock in one place.</p>
+      </div>
+      <small class="version">DAY-21 PROJECT · v1.0</small>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <button id="menuToggle" class="mobile-menu" aria-label="Toggle navigation">☰</button>
+        <div class="eyebrow">WORKSPACE / <span id="breadcrumb">DASHBOARD</span></div>
+        <h1 id="pageTitle">Dashboard Overview</h1>
+      </div>
+      <div class="topbar-right">
+        <span class="online-dot"></span>
+        <span class="today" id="today"></span>
+        <div class="avatar">IP</div>
+      </div>
+    </header>
+
+    <section class="page active" id="dashboard">
+      <div class="welcome-banner">
+        <div>
+          <span class="welcome-tag">YOUR BUSINESS AT A GLANCE</span>
+          <h2>Welcome to your inventory ✨</h2>
+          <p>Track your products, monitor stock and manage sales effortlessly.</p>
+        </div>
+        <div class="banner-art">📦</div>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card">
+          <div class="stat-top"><span>Total Products</span><span class="stat-icon purple">▣</span></div>
+          <h2 id="totalProducts">0</h2><p>Unique products</p>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Total Stock Units</span><span class="stat-icon blue">⇅</span></div>
+          <h2 id="totalStock">0</h2><p>Units available</p>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Inventory Value</span><span class="stat-icon green">₹</span></div>
+          <h2 id="inventoryValue">₹0</h2><p>Price × quantity</p>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Low Stock Items</span><span class="stat-icon orange">!</span></div>
+          <h2 id="lowStock">0</h2><p>Items with 10 or fewer units</p>
+        </article>
+      </div>
+
+      <div class="content-grid">
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Recent Products</h3><p>Your inventory at a glance</p></div><button class="btn btn-light" data-go="products">View all →</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th></tr></thead><tbody id="dashboardProducts"></tbody></table></div>
+        </article>
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Stock Alerts</h3><p>Products needing attention</p></div><span class="alert-symbol">!</span></div>
+          <div id="stockAlerts" class="alert-list"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="page" id="products">
+      <div class="section-intro"><div><h2>Product Management</h2><p>Add, update and organize your inventory.</p></div><span class="pill">PRODUCT CATALOG</span></div>
+      <div class="panel form-panel">
+        <div class="panel-heading"><div><h3 id="productFormTitle">Add New Product</h3><p>Enter product information below.</p></div><span class="form-emoji">📦</span></div>
+        <form id="productForm">
+          <input type="hidden" id="productId">
+          <div class="form-grid">
+            <label>Product Name *<input id="productName" required minlength="2" placeholder="e.g. Wireless Mouse"></label>
+            <label>Category *
+              <select id="productCategory" required>
+                <option value="">Select category</option><option>Electronics</option><option>Accessories</option><option>Furniture</option><option>Stationery</option><option>Other</option>
+              </select>
+            </label>
+            <label>Selling Price (₹) *<input id="productPrice" type="number" required min="0.01" step="0.01" placeholder="0.00"></label>
+            <label>Available Quantity *<input id="productStock" type="number" required min="0" step="1" placeholder="0"></label>
+            <label>Supplier
+              <select id="productSupplier"><option value="">No supplier selected</option></select>
+            </label>
+            <label class="full-width">Product Image
+              <input id="productImage" type="file" accept="image/png,image/jpeg,image/webp">
+              <small class="field-help">Choose a JPG, PNG or WebP image. Maximum 2 MB.</small>
+              <img id="imagePreview" class="image-preview hidden" alt="Product image preview">
+            </label>
+            <label class="full-width">Description *<textarea id="productDescription" required minlength="10" rows="3" placeholder="Describe this product in at least 10 characters..."></textarea></label>
+          </div>
+          <div class="form-actions"><button type="button" id="cancelProductEdit" class="btn btn-light hidden">Cancel</button><button class="btn btn-primary" id="saveProductBtn">＋ Add Product</button></div>
+        </form>
+      </div>
+      <div class="panel">
+        <div class="panel-heading"><div><h3>All Products</h3><p id="productCount">0 products in your inventory</p></div><input class="search" id="productSearch" placeholder="⌕ Search products..."></div>
+        <div class="table-wrap"><table><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Quantity</th><th>Supplier</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productsTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="page" id="suppliers">
+      <div class="section-intro"><div><h2>Supplier Management</h2><p>Keep your supplier contacts organized.</p></div><span class="pill">PARTNER DIRECTORY</span></div>
+      <div class="panel form-panel">
+        <div class="panel-heading"><div><h3 id="supplierFormTitle">Add New Supplier</h3><p>Enter supplier contact information.</p></div><span class="form-emoji">🤝</span></div>
+        <form id="supplierForm">
+          <input type="hidden" id="supplierId">
+          <div class="form-grid">
+            <label>Supplier Name *<input id="supplierName" required minlength="2" placeholder="Contact person"></label>
+            <label>Company Name *<input id="companyName" required placeholder="Company name"></label>
+            <label>Phone Number *<input id="supplierPhone" type="tel" required pattern="[0-9+() .-]{7,20}" placeholder="Phone number"></label>
+            <label>Email Address *<input id="supplierEmail" type="email" required placeholder="name@example.com"></label>
+            <label class="full-width">Address *<textarea id="supplierAddress" required minlength="5" rows="2" placeholder="Full business address"></textarea></label>
+          </div>
+          <div class="form-actions"><button type="button" id="cancelSupplierEdit" class="btn btn-light hidden">Cancel</button><button class="btn btn-primary">＋ Add Supplier</button></div>
+        </form>
+      </div>
+      <div class="panel">
+        <div class="panel-heading"><div><h3>All Suppliers</h3><p id="supplierCount">0 suppliers</p></div><input class="search" id="supplierSearch" placeholder="⌕ Search suppliers..."></div>
+        <div class="table-wrap"><table><thead><tr><th>Supplier</th><th>Company</th><th>Phone</th><th>Email</th><th>Address</th><th>Actions</th></tr></thead><tbody id="suppliersTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="page" id="sales">
+      <div class="section-intro"><div><h2>Sales Management</h2><p>Record sales and automatically update your stock.</p></div><span class="pill">SALES & REVENUE</span></div>
+      <div class="panel form-panel">
+        <div class="panel-heading"><div><h3>Create a Sale</h3><p>Complete the details to generate a sale record.</p></div><span class="form-emoji">🧾</span></div>
+        <form id="saleForm">
+          <div class="form-grid">
+            <label>Customer Name *<input id="customerName" required placeholder="Customer name"></label>
+            <label>Customer Phone *<input id="customerPhone" type="tel" required pattern="[0-9+() .-]{7,20}" placeholder="Phone number"></label>
+            <label class="full-width">Select Product *<select id="saleProduct" required><option value="">Choose a product</option></select></label>
+            <label>Quantity *<input id="saleQuantity" type="number" required min="1" step="1" value="1"></label>
+            <label>Product Price (₹)<input id="salePrice" readonly placeholder="Auto-calculated"></label>
+            <label>Discount (₹)<input id="saleDiscount" type="number" min="0" step="0.01" value="0"></label>
+            <label>Sale Date *<input id="saleDate" type="date" required></label>
+          </div>
+          <div class="sale-total"><span>Final Amount</span><strong id="saleTotal">₹0.00</strong><small id="saleCalculation">Select a product to calculate the total.</small></div>
+          <div class="form-actions"><button class="btn btn-primary">✓ Confirm Sale</button></div>
+        </form>
+      </div>
+      <div class="panel">
+        <div class="panel-heading"><div><h3>Sales History</h3><p id="salesCount">0 sales recorded</p></div><input id="salesSearch" class="search" placeholder="⌕ Search customer or invoice..."></div>
+        <div class="table-wrap"><table><thead><tr><th>Invoice</th><th>Customer</th><th>Product</th><th>Qty</th><th>Discount</th><th>Total</th><th>Date</th></tr></thead><tbody id="salesTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="page" id="stock">
+      <div class="section-intro"><div><h2>Stock Management</h2><p>Control incoming and outgoing inventory movements.</p></div><span class="pill">INVENTORY CONTROL</span></div>
+      <div class="stats-grid stock-stats">
+        <article class="stat-card"><div class="stat-top"><span>Stock In Records</span><span class="stat-icon green">↙</span></div><h2 id="stockInCount">0</h2><p>Incoming movements</p></article>
+        <article class="stat-card"><div class="stat-top"><span>Stock Out Records</span><span class="stat-icon orange">↗</span></div><h2 id="stockOutCount">0</h2><p>Outgoing movements</p></article>
+      </div>
+      <div class="panel form-panel">
+        <div class="panel-heading"><div><h3>Record Stock Movement</h3><p>Stock Out cannot exceed the available quantity.</p></div><span class="form-emoji">⇅</span></div>
+        <form id="stockForm">
+          <div class="form-grid">
+            <label>Product *<select id="stockProduct" required><option value="">Choose a product</option></select></label>
+            <label>Movement Type *<select id="stockType" required><option value="in">Stock In</option><option value="out">Stock Out</option></select></label>
+            <label>Quantity *<input id="stockQuantity" type="number" required min="1" step="1" placeholder="Enter quantity"></label>
+            <label>Reason *<select id="stockReason" required><option value="">Choose a reason</option><option>Purchase / Restock</option><option>Damaged goods</option><option>Return</option><option>Manual adjustment</option><option>Dispatch</option><option>Other</option></select></label>
+          </div>
+          <div id="availableStock" class="field-help">Select a product to see available stock.</div>
+          <div class="form-actions"><button class="btn btn-primary">✓ Update Stock</button></div>
+        </form>
+      </div>
+      <div class="panel">
+        <div class="panel-heading"><div><h3>Stock Movement History</h3><p>Every manual movement and completed sale is recorded.</p></div><input class="search" id="stockSearch" placeholder="⌕ Search history..."></div>
+        <div class="filter-row"><label>Movement type <select id="stockFilter"><option value="all">All movements</option><option value="in">Stock In</option><option value="out">Stock Out</option></select></label></div>
+        <div class="table-wrap"><table><thead><tr><th>Product</th><th>Type</th><th>Quantity</th><th>Previous Stock</th><th>Updated Stock</th><th>Reason</th><th>Date</th></tr></thead><tbody id="stockTable"></tbody></table></div>
+      </div>
+    </section>
+
+    <footer class="footer">© 2026 InventoPro · Day-21 Inventory Management System</footer>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/suppliers.js"></script>
+  <script src="js/sales.js"></script>
+  <script src="js/stockManagement.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
